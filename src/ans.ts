@@ -5,9 +5,14 @@ import User from "./usermodel";
 const allowedchannels = ["1028756668202352670"];
 const premiumroles = ["1028760739936211026"];
 export async function ans(interaction: ChatInputCommandInteraction<CacheType>, guild: Guild, member: GuildMember, config: Object) {
+  const prem = premiumroles.some((role) => member.roles.cache.has(role));
+  let url = <string>interaction.options.getString("url");
+  let id = "";
+  if (url.endsWith("exc")) id = new RegExp("\\d{13}").exec(url)![0];
+  else id = url.substring(<number>url?.lastIndexOf("q") + 1);
   try {
     const user = await User.findOne({ userid: interaction.user.id });
-    const prem = premiumroles.some((role) => member.roles.cache.has(role));
+
     if (!allowedchannels.includes(interaction.channelId)) {
       return await interaction.reply({ content: "**❌ The bot may not be used in this channel!**", ephemeral: true });
     }
@@ -32,16 +37,13 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
       });
       await tosave.save();
     }
-    let url = <string>interaction.options.getString("url");
     url = url?.trim();
     console.log("url:", url);
     const domain = new URL(url).hostname;
     console.log(domain);
 
     if (!domain.includes("chegg")) throw "wrong domain";
-    let id = "";
-    if (url.endsWith("exc")) id = new RegExp("\\d{13}").exec(url)![0];
-    else id = url.substring(<number>url?.lastIndexOf("q") + 1);
+
     if (!id) throw "no id";
     console.log("id:", id);
     await firstReq(<string>url, config);
@@ -84,12 +86,22 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
             });
           } else {
             await interaction.reply("❌ **Unable to retrieve information about the question.**");
+            await (interaction.client.channels.cache.get("1028938788329771048") as TextChannel).send({
+              content: `❌ **${interaction.user.username}#${interaction.user.discriminator}**${
+                prem ? "💸" : "🆓"
+              } failed to get ${url} with QID **${id}** *<${new Date().toTimeString()}>*`,
+            });
           }
         }
       });
   } catch (error) {
     console.log(error);
 
-    await interaction.reply({ content: "❌ **Unable to retrieve information about the question.**", ephemeral: true });
+    await interaction.reply({ content: "❌ **An error occurred while attempting to answer the question.**", ephemeral: true });
+    await (interaction.client.channels.cache.get("1028938788329771048") as TextChannel).send({
+      content: `❌ **${interaction.user.username}#${interaction.user.discriminator}**${
+        prem ? "💸" : "🆓"
+      } failed to crash for link ${url} with QID **${id}** *<${new Date().toTimeString()}>*`,
+    });
   }
 }
