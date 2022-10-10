@@ -4,7 +4,7 @@ import User from "./usermodel";
 
 const allowedchannels = ["1028756668202352670"];
 const premiumroles = ["1028760739936211026"];
-export async function ans(interaction: ChatInputCommandInteraction<CacheType>, guild: Guild, member: GuildMember) {
+export async function ans(interaction: ChatInputCommandInteraction<CacheType>, guild: Guild, member: GuildMember, config: Object) {
   try {
     const user = await User.findOne({ userid: interaction.user.id });
     const prem = premiumroles.some((role) => member.roles.cache.has(role));
@@ -44,10 +44,10 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
     else id = url.substring(<number>url?.lastIndexOf("q") + 1);
     if (!id) throw "no id";
     console.log("id:", id);
-    await firstReq(<string>url);
-    await secondReq(<string>url);
+    await firstReq(<string>url, config);
+    await secondReq(<string>url, config);
 
-    await finalreq(url, id)
+    await finalreq(url, id, config)
       .then((resp) => {
         return resp.text();
       })

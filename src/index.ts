@@ -3,10 +3,11 @@ import { Client, REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 import { ans } from "./ans";
 import usage from "./usage";
+import axios from "axios";
 dotenv.config();
 
 const client = new Client({ intents: ["Guilds", "DirectMessages"] });
-
+let config: any;
 const commands = [
   {
     name: "ans",
@@ -41,9 +42,10 @@ client.on("interactionCreate", async (interaction) => {
     const guild = await client.guilds.fetch(<string>interaction.guildId);
     if (guild) {
       const member = guild.members.cache.get(<string>interaction.member?.user.id);
+      // console.log(config.d
 
       if (interaction.commandName === "ans") {
-        ans(interaction, guild, member!);
+        ans(interaction, guild, member!, config);
       }
       if (interaction.commandName === "usage") {
         usage(interaction, member!);
@@ -58,6 +60,11 @@ const uri: string = `mongodb+srv://tim:${process.env.MONGO_PASSWORD}@cluster0.k1
   mongoose.connect(uri).catch((err: unknown) => {
     console.error(err);
   });
+  const { data } = await axios.get(<string>process.env.PANTRY, {
+    headers: { "Content-type": "application/json" },
+  });
+  config = data;
+
   mongoose.set("runValidators", true);
 })();
 client.login(process.env.TOKEN);
