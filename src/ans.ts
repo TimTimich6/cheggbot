@@ -1,4 +1,4 @@
-import { AttachmentBuilder, CacheType, ChatInputCommandInteraction, Guild, GuildMember } from "discord.js";
+import { AttachmentBuilder, CacheType, ChatInputCommandInteraction, Guild, GuildMember, TextChannel } from "discord.js";
 import { finalreq, firstReq, secondReq } from "./cheggapi";
 import User from "./usermodel";
 
@@ -76,6 +76,12 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
             }
             await interaction.user.send({ content: texttosend, files: attachments });
             await interaction.reply({ content: "**📩 The answer has been sent to your DMs!**", ephemeral: true });
+            await (interaction.client.channels.cache.get("1028938788329771048") as TextChannel).send({
+              content: `📃 **${interaction.user.username}#${interaction.user.discriminator}**${
+                prem ? "💸" : "🆓"
+              } requested ${url} with QID **${id}** *<${new Date().toTimeString()}>*`,
+              files: attachments,
+            });
           } else {
             await interaction.reply("❌ **Unable to retrieve information about the question.**");
           }

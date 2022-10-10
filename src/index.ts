@@ -31,7 +31,9 @@ const rest = new REST({ version: "10" }).setToken(<string>process.env.TOKEN);
 
 client.once("ready", async () => {
   console.log("ready");
-  await (client.channels.cache.get("1028933696809615361") as TextChannel).send("Bot is up at " + new Date().toTimeString());
+  await (client.channels.cache.get("1028933696809615361") as TextChannel).send(
+    `✅ Bot is up on **${process.env.ENV}** *<${new Date().toTimeString()}>*`
+  );
 });
 
 client.on("interactionCreate", async (interaction) => {
