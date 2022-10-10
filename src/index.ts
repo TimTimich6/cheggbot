@@ -42,7 +42,6 @@ client.on("interactionCreate", async (interaction) => {
     const guild = await client.guilds.fetch(<string>interaction.guildId);
     if (guild) {
       const member = guild.members.cache.get(<string>interaction.member?.user.id);
-      // console.log(config.d
 
       if (interaction.commandName === "ans") {
         ans(interaction, guild, member!, config);
@@ -64,6 +63,7 @@ const uri: string = `mongodb+srv://tim:${process.env.MONGO_PASSWORD}@cluster0.k1
     headers: { "Content-type": "application/json" },
   });
   config = data;
+  console.log(config);
 
   mongoose.set("runValidators", true);
 })();

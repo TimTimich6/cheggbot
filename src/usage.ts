@@ -4,8 +4,9 @@ const premiumroles = ["1028760739936211026"];
 
 export default async function ans(interaction: ChatInputCommandInteraction<CacheType>, member: GuildMember) {
   const user = await User.findOne({ userid: interaction.user.id });
+  const prem = premiumroles.some((role) => member.roles.cache.has(role));
+
   if (user) {
-    const prem = premiumroles.some((role) => member.roles.cache.has(role));
     user.premium = prem;
     interaction.reply({
       embeds: [
@@ -30,16 +31,39 @@ export default async function ans(interaction: ChatInputCommandInteraction<Cache
                   },
                 ]
               : []),
-            ...[
-              {
-                name: `Total uses`,
-                value: user.totalUsed.toString(),
-              },
-            ],
+
+            {
+              name: `Total uses`,
+              value: user.totalUsed.toString(),
+            },
           ],
         },
       ],
     });
     await user.save();
+  } else {
+    interaction.reply({
+      embeds: [
+        {
+          title: `Bot Statistics`,
+          description: `Track your statistics on the quota for the bot`,
+          color: 0xdbeb71,
+          fields: [
+            {
+              name: `Subscription`,
+              value: prem ? "Premium" : "Free",
+            },
+            {
+              name: `Last use`,
+              value: "No data",
+            },
+            {
+              name: `Total uses`,
+              value: "No data",
+            },
+          ],
+        },
+      ],
+    });
   }
 }
