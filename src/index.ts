@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Client, REST, Routes } from "discord.js";
+import { Client, REST, Routes, TextChannel } from "discord.js";
 import dotenv from "dotenv";
 import { ans } from "./ans";
 import usage from "./usage";
@@ -31,9 +31,8 @@ const rest = new REST({ version: "10" }).setToken(<string>process.env.TOKEN);
 
 client.once("ready", async () => {
   console.log("ready");
+  await (client.channels.cache.get("1028933696809615361") as TextChannel).send("Bot is up at " + new Date().toTimeString());
 });
-
-console.log(process.env.AUTH);
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
