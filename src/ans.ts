@@ -101,7 +101,7 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
     await (interaction.client.channels.cache.get("1028938788329771048") as TextChannel).send({
       content: `❌ **${interaction.user.username}#${interaction.user.discriminator}**${
         prem ? "💸" : "🆓"
-      } failed to crash for link ${url} with QID **${id}** *<${new Date().toTimeString()}>*`,
+      } error while getting an answer for link ${url} with QID **${id}** *<${new Date().toTimeString()}>*`,
     });
   }
 }

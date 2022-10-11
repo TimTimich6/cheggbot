@@ -45,7 +45,7 @@ export async function secondReq(url: string, config: any) {
       "User-Agent": config.UA,
       "Referrer-Policy": "strict-origin-when-cross-origin",
     },
-    body: '{"operationName":"DigitalOrderLineItems","variables":{},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"d16d870021b064e94ccbd61e8de028c9636e8ce7e9435f60991f0dc0e89f1bfd"}}}',
+    body: `{"operationName":"DigitalOrderLineItems","variables":{},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${config.sha1}"}}}`,
     method: "POST",
   });
 }
@@ -66,13 +66,13 @@ export function finalreq(url: string, id: string, config: any) {
       "sec-fetch-dest": "empty",
       "sec-fetch-mode": "cors",
       "sec-fetch-site": "same-site",
-      "User-Agent": config.UA,
+      "user-agent": config.UA,
       "x-chegg-referrer": <string>url,
       cookie: config.cookie,
       Referer: "https://www.chegg.com",
       "Referrer-Policy": "strict-origin-when-cross-origin",
     },
-    body: `{"operationName":"QnaPageAnswer","variables":{"id":${id}},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"bcbf649a6d9e0850ee15303538374d4cd7022bd80a3081d1b7ae3b029e5b09ca"}}}`,
+    body: `{"operationName":"QnaPageAnswer","variables":{"id":${id}},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${config.sha2}"}}}`,
     method: "POST",
   });
 }
