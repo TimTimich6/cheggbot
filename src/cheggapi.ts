@@ -1,6 +1,5 @@
 import fetch from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import axios from "axios";
 const proxy = "http://zabra:oYpVV4prBZUtwAS3@proxy.packetstream.io:31112";
 export const agent = new HttpsProxyAgent(proxy);
 export async function firstReq(url: string, config: any) {
@@ -27,6 +26,7 @@ export async function firstReq(url: string, config: any) {
     agent,
   });
 }
+
 export async function secondReq(url: string, config: any) {
   console.log(config.auth);
 
@@ -57,49 +57,27 @@ export async function secondReq(url: string, config: any) {
 }
 export function finalreq(url: string, id: string, config: any) {
   console.log(config.auth);
-
-return axios.post("https://gateway.chegg.com/one-graph/graphql",{"operationName":"QnaPageAnswer","variables":{id},"extensions":{"persistedQuery":{"version":1,"sha256Hash":config.sha2}}},{headers: {
+  return fetch("https://gateway.chegg.com/one-graph/graphql", {
+    headers: {
       accept: "*/*",
       "accept-language": "en-US,en;q=0.9,es;q=0.8",
       "apollographql-client-name": "chegg-web",
       "apollographql-client-version": "main-a21cd9ba-3144690516",
       authorization: `Basic ${config.auth}`,
       "content-type": "application/json",
-      // "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+      "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
       "sec-ch-ua-mobile": "?0",
       "sec-ch-ua-platform": '"Windows"',
       "sec-fetch-dest": "empty",
       "sec-fetch-mode": "cors",
       "sec-fetch-site": "same-site",
-      // "user-agent": config.UA,
+      "user-agent": config.UA,
       "x-chegg-referrer": <string>url,
       cookie: config.cookie,
       Referer: "https://www.chegg.com",
-      // "Referrer-Policy": "strict-origin-when-cross-origin",
-    },})
-  // return fetch("https://gateway.chegg.com/one-graph/graphql", {
-  //   headers: {
-  //     accept: "*/*",
-  //     "accept-language": "en-US,en;q=0.9,es;q=0.8",
-  //     "apollographql-client-name": "chegg-web",
-  //     "apollographql-client-version": "main-a21cd9ba-3144690516",
-  //     authorization: `Basic ${config.auth}`,
-  //     "content-type": "application/json",
-  //     // "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
-  //     "sec-ch-ua-mobile": "?0",
-  //     "sec-ch-ua-platform": '"Windows"',
-  //     "sec-fetch-dest": "empty",
-  //     "sec-fetch-mode": "cors",
-  //     "sec-fetch-site": "same-site",
-  //     // "user-agent": config.UA,
-  //     "x-chegg-referrer": <string>url,
-  //     cookie: config.cookie,
-  //     Referer: "https://www.chegg.com",
-  //     // "Referrer-Policy": "strict-origin-when-cross-origin",
-  //   },
-  //   body: `{"operationName":"QnaPageAnswer","variables":{"id":${id}},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${config.sha2}"}}}`,
-  //   method: "POST",
-  //   agent,
-  // });
+    },
+    body: `{"operationName":"QnaPageAnswer","variables":{"id":${id}},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${config.sha2}"}}}`,
+    method: "POST",
+    agent,
+  });
 }
-
