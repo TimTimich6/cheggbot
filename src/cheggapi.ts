@@ -1,4 +1,7 @@
 import fetch from "node-fetch";
+import { HttpsProxyAgent } from "https-proxy-agent";
+const proxy = "http://zabra:oYpVV4prBZUtwAS3@proxy.packetstream.io:31112";
+export const agent = new HttpsProxyAgent(proxy);
 export async function firstReq(url: string, config: any) {
   await fetch("https://www.chegg.com/_ajax/global/init", {
     headers: {
@@ -20,6 +23,7 @@ export async function firstReq(url: string, config: any) {
     },
     body: undefined,
     method: "GET",
+    agent,
   });
 }
 export async function secondReq(url: string, config: any) {
@@ -47,6 +51,7 @@ export async function secondReq(url: string, config: any) {
     },
     body: `{"operationName":"DigitalOrderLineItems","variables":{},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${config.sha1}"}}}`,
     method: "POST",
+    agent,
   });
 }
 export function finalreq(url: string, id: string, config: any) {
@@ -74,5 +79,6 @@ export function finalreq(url: string, id: string, config: any) {
     },
     body: `{"operationName":"QnaPageAnswer","variables":{"id":${id}},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${config.sha2}"}}}`,
     method: "POST",
+    agent,
   });
 }

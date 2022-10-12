@@ -14,12 +14,12 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
     const user = await User.findOne({ userid: interaction.user.id });
 
     if (!allowedchannels.includes(interaction.channelId)) {
-      return await interaction.reply({ content: "**❌ The bot may not be used in this channel!**", ephemeral: true });
+      return await interaction.editReply({ content: "**❌ The bot may not be used in this channel!**" });
     }
     if (user) {
       console.log(user.premium, prem);
       if (!prem && user.lastUsed.getTime() + 21_600_000 > Date.now()) {
-        return await interaction.reply({ content: "**❌ Your free plan cooldown is not yet over!**", ephemeral: true });
+        return await interaction.editReply({ content: "**❌ Your free plan cooldown is not yet over!**" });
       } else {
         user.totalUsed = user.totalUsed + 1;
         user.lastUsed = new Date();
@@ -77,7 +77,7 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
               }\n`;
             }
             await interaction.user.send({ content: texttosend, files: attachments });
-            await interaction.reply({ content: "**📩 The answer has been sent to your DMs!**", ephemeral: true });
+            await interaction.editReply({ content: "**📩 The answer has been sent to your DMs!**" });
             await (interaction.client.channels.cache.get("1028938788329771048") as TextChannel).send({
               content: `📃 **${interaction.user.username}#${interaction.user.discriminator}**${
                 prem ? "💸" : "🆓"
@@ -85,7 +85,7 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
               files: attachments,
             });
           } else {
-            await interaction.reply("❌ **Unable to retrieve information about the question.**");
+            await interaction.editReply("❌ **Unable to retrieve information about the question.**");
             await (interaction.client.channels.cache.get("1028938788329771048") as TextChannel).send({
               content: `❌ **${interaction.user.username}#${interaction.user.discriminator}**${
                 prem ? "💸" : "🆓"
@@ -97,7 +97,7 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
   } catch (error) {
     console.log(error);
 
-    await interaction.reply({ content: "❌ **An error occurred while attempting to answer the question.**", ephemeral: true });
+    await interaction.editReply({ content: "❌ **An error occurred while attempting to answer the question.**" });
     await (interaction.client.channels.cache.get("1028938788329771048") as TextChannel).send({
       content: `❌ **${interaction.user.username}#${interaction.user.discriminator}**${
         prem ? "💸" : "🆓"

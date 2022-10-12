@@ -45,6 +45,7 @@ client.on("interactionCreate", async (interaction) => {
       const member = guild.members.cache.get(<string>interaction.member?.user.id);
 
       if (interaction.commandName === "ans") {
+        await interaction.deferReply();
         ans(interaction, guild, member!, config);
       }
       if (interaction.commandName === "usage") {
