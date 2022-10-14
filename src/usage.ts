@@ -1,5 +1,5 @@
 import { CacheType, ChatInputCommandInteraction, GuildMember } from "discord.js";
-import User from "./usermodel";
+import User from "./models/usermodel";
 const premiumroles = ["1028760739936211026"];
 
 export default async function ans(interaction: ChatInputCommandInteraction<CacheType>, member: GuildMember) {

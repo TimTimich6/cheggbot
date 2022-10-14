@@ -27,8 +27,6 @@ export async function firstReq(url: string, config: any) {
 }
 
 export async function secondReq(url: string, config: any) {
-  console.log(config.auth);
-
   await fetch("https://gateway.chegg.com/one-graph/graphql", {
     headers: {
       accept: "*/*",
@@ -37,7 +35,6 @@ export async function secondReq(url: string, config: any) {
       "apollographql-client-version": "main-50430f42-3139728262",
       authorization: `Basic ${config.auth}`,
       "content-type": "application/json",
-      "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
       "sec-ch-ua-mobile": "?0",
       "sec-ch-ua-platform": '"Windows"',
       "sec-fetch-dest": "empty",
@@ -47,25 +44,19 @@ export async function secondReq(url: string, config: any) {
       cookie: config.cookie,
       Referer: "https://www.chegg.com/",
       "User-Agent": config.UA,
-      "Referrer-Policy": "strict-origin-when-cross-origin",
     },
     body: `{"operationName":"DigitalOrderLineItems","variables":{},"extensions":{"persistedQuery":{"version":1,"sha256Hash":"${config.sha1}"}}}`,
     method: "POST",
   });
 }
 export function finalreq(url: string, id: string, config: any) {
-  console.log(config.auth);
   return fetch("https://gateway.chegg.com/one-graph/graphql", {
     headers: {
       accept: "*/*",
-      "accept-language": "en-US,en;q=0.9,es;q=0.8",
       "apollographql-client-name": "chegg-web",
       "apollographql-client-version": "main-a21cd9ba-3144690516",
       authorization: `Basic ${config.auth}`,
       "content-type": "application/json",
-      "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": '"Windows"',
       "sec-fetch-dest": "empty",
       "sec-fetch-mode": "cors",
       "sec-fetch-site": "same-site",

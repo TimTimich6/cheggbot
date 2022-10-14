@@ -1,12 +1,15 @@
 import { AttachmentBuilder, CacheType, ChatInputCommandInteraction, Guild, GuildMember, TextChannel } from "discord.js";
+import { resolve } from "path";
 import { finalreq, firstReq, secondReq } from "./cheggapi";
-import User from "./usermodel";
+import Solution from "./models/solutionmodel";
+import User from "./models/usermodel";
 
 const allowedchannels = ["1028756668202352670"];
 const premiumroles = ["1028760739936211026"];
 export async function ans(interaction: ChatInputCommandInteraction<CacheType>, guild: Guild, member: GuildMember, config: Object) {
   const prem = premiumroles.some((role) => member.roles.cache.has(role));
   let url = <string>interaction.options.getString("url");
+  url = url?.trim();
   let id = "";
   if (url.endsWith("exc")) id = new RegExp("\\d{13}").exec(url)![0];
   else id = url.substring(<number>url?.lastIndexOf("q") + 1);
@@ -17,7 +20,6 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
       return await interaction.editReply({ content: "**❌ The bot may not be used in this channel!**" });
     }
     if (user) {
-      console.log(user.premium, prem);
       if (!prem && user.lastUsed.getTime() + 21_600_000 > Date.now()) {
         return await interaction.editReply({ content: "**❌ Your free plan cooldown is not yet over!**" });
       } else {
@@ -37,10 +39,8 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
       });
       await tosave.save();
     }
-    url = url?.trim();
     console.log("url:", url);
     const domain = new URL(url).hostname;
-    console.log(domain);
 
     if (!domain.includes("chegg")) throw "wrong domain";
 
@@ -54,7 +54,7 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
         return resp.text();
       })
       .then(async (text) => {
-        console.log(text);
+        console.log("text: ", text);
         const data = JSON.parse(text);
         const answers = data.data.questionByLegacyId.htmlAnswers;
         if (answers) {
@@ -75,6 +75,13 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
               texttosend += `> 📄 **Solution #${index + 1}** by ${answers[index].answerData.author.firstName} ${
                 answers[index].answerData.author.lastName
               }\n`;
+              const newSol = new Solution({
+                html: answers[index].answerData.html,
+                url: url,
+                index: id,
+                createdBy: user?._id,
+              });
+              await newSol.save();
             }
             await interaction.user.send({ content: texttosend, files: attachments });
             await interaction.editReply({ content: "**📩 The answer has been sent to your DMs!**" });
