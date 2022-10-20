@@ -1,5 +1,4 @@
 import { AttachmentBuilder, CacheType, ChatInputCommandInteraction, Guild, GuildMember, TextChannel } from "discord.js";
-import { resolve } from "path";
 import { finalreq, firstReq, secondReq } from "./cheggapi";
 import Solution from "./models/solutionmodel";
 import User from "./models/usermodel";
@@ -75,13 +74,13 @@ export async function ans(interaction: ChatInputCommandInteraction<CacheType>, g
               texttosend += `> 📄 **Solution #${index + 1}** by ${answers[index].answerData.author.firstName} ${
                 answers[index].answerData.author.lastName
               }\n`;
-              const newSol = new Solution({
-                html: answers[index].answerData.html,
-                url: url,
-                index: id,
-                createdBy: user?._id,
-              });
-              await newSol.save();
+              //   const newSol = new Solution({
+              //     html: answers[index].answerData.html,
+              //     url: url,
+              //     index: id,
+              //     createdBy: user?._id,
+              //   });
+              //  await newSol.save()
             }
             await interaction.user.send({ content: texttosend, files: attachments });
             await interaction.editReply({ content: "**📩 The answer has been sent to your DMs!**" });
